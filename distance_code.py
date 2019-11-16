@@ -7,7 +7,7 @@ Created on Mon Oct 28 14:28:21 2019
 """
 
 import pandas as pd
-from math import cos, asin, sqrt
+from math import sqrt
 import math
 
 
@@ -32,16 +32,12 @@ for index, row in arrests.iterrows():
     point = {'lat': row['Latitude'], 'lon': row['Longitude']}
     indexz.append(index)
     distances.append(closest(c_loc, point))
-    #row['closest_census_loc'] = closest(c_loc, point)
+    if index%200==0:
+        print(index/arrests.size)
+        
+census_locations = pd.DataFrame(list(zip(indexz, distances)), columns =['index', 'distance']) 
 
+total = arrests.head(indexz[-1]+1)
+total["BlockLocation"] = distances
 
-
-indexz2 = indexz
-distances2 = distances
-
-census_locations = pd.DataFrame(list(zip(indexz2, distances2)), columns =['index', 'distance']) 
-
-final_out = arrests.head(100661)
-final_out["BlockLocation"] = distances2
-
-final_out.to_csv("arrests_w_census_loc.csv")
+total.to_csv("arrests_w_census_loc.csv")
